@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import './index.css';
+import { AuthContextProvider } from './contexts/AuthContext';
+import './index.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Layout />
+    <AuthContextProvider>
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('freshrimpsushi'),
 );

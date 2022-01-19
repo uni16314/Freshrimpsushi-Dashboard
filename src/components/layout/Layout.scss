@@ -1,0 +1,13 @@
+.layout-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+
+  .layout-content {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    background-color: #eeeeee;
+    overflow: auto;
+  }
+}

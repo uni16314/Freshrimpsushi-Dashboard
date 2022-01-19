@@ -1,0 +1,32 @@
+.post-comment-page {
+  flex: 1;
+  background-color: pink;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .header-box {
+    background-color: #58afff;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-sizing: border-box;
+    border-bottom: 2px solid white;
+  }
+
+  .body-box {
+    background-color: #eeeeee;
+    height: calc(100vh - 116px);
+    overflow: scroll;
+  }
+
+  .footer-box {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

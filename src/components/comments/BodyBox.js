@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LinkIcon from '@mui/icons-material/Link';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -58,7 +59,7 @@ const CommentItem = ({ index, comment, colScope }) => {
         <td className="comment-item" style={{ width: colScope[1] }}>
           {comment.author}
         </td>
-        <td className="comment-item" style={{ width: colScope[2] }} ref={katexRef}>
+        <td className="comment-item p20" style={{ width: colScope[2] }} ref={katexRef}>
           <div
             dangerouslySetInnerHTML={{
               __html: readMore
@@ -70,14 +71,14 @@ const CommentItem = ({ index, comment, colScope }) => {
           />
           {checkString(comment.content, 120) ? (
             <button className="more-btn" onClick={() => setReadMore(!readMore)}>
-              {readMore ? 'show less' : '   read more'}
+              {readMore ? 'Show less' : 'Read more'}
             </button>
           ) : null}
         </td>
         <td className="comment-item" style={{ width: colScope[3] }}>
           {comment.board_title}
         </td>
-        <td className="comment-item" style={{ width: colScope[4] }}>
+        <td className="comment-item p20" style={{ width: colScope[4] }}>
           {comment.datetime}
         </td>
         <td className="comment-item" style={{ width: colScope[5] }}>
@@ -89,12 +90,8 @@ const CommentItem = ({ index, comment, colScope }) => {
                 variant="contained"
                 startIcon={<DeleteIcon />}
                 color="error"
-              >
-                삭제
-              </Button>
-              <Button className="btn btn-open" onClick={gotoBtn} variant="contained" startIcon={<OpenInNewIcon />}>
-                이동
-              </Button>
+              />
+              <Button className="btn btn-open" onClick={gotoBtn} variant="contained" startIcon={<LinkIcon />} />
             </div>
             <div className="item-tools-bottom">
               <Button className="btn btn-open" onClick={() => {}} variant="outline" startIcon={<EditIcon />}>

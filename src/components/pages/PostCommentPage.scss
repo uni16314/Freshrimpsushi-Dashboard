@@ -2,6 +2,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  margin: 40px;
+  justify-content: space-between;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 
   table {
     flex: 1;
@@ -15,9 +22,14 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      background-color: #58afff;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
+      // background-color: #58afff;
+      background: #36d1dc; /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #5b86e5, #36d1dc); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(
+        to left,
+        #5b86e5,
+        #36d1dc
+      ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
       border-bottom: 1px solid #eeeeee;
       box-sizing: border-box;
     }
@@ -33,8 +45,8 @@
 
   .footer-box {
     display: flex;
-    justify-content: flex-end;
-    background-color: green;
+    align-items: center;
+    justify-content: center;
     min-height: 50px;
   }
 }

@@ -26,6 +26,7 @@
   justify-content: flex-start;
   border-bottom: 1px solid #ced4da;
   box-sizing: border-box;
+  text-align: center;
 
   &:last-child {
     border: none;
@@ -36,10 +37,15 @@
   }
 
   .comment-item {
-    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border-right: 1px solid #ced4da;
     box-sizing: border-box;
-    padding: 10px 0;
+    padding: 20px 0;
+    line-height: 1.5em;
 
     a {
       font-size: 1.05rem;
@@ -55,9 +61,15 @@
       border: none;
     }
 
+    &.p20 {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+
     &:nth-child(3) {
+      align-items: flex-start;
+      justify-content: center;
       text-align: left;
-      padding-left: 2%;
 
       .more-btn {
         background: transparent;
@@ -73,14 +85,19 @@
         }
       }
     }
-
+    
     .item-tools {
       display: flex;
       flex-direction: column;
       align-items: center;
 
+      .css-1d6wzja-MuiButton-startIcon {
+        margin: 0;
+        padding: 0;
+      }
+
       .item-tools-top {
-        width: calc(100% - 40px);
+        gap: 5px;
         margin-bottom: 10px;
         display: flex;
         align-items: center;

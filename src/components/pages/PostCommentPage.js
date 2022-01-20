@@ -1,5 +1,6 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import CommentContext from '../../contexts/CommentContext';
 import BodyBox from '../comments/BodyBox';
 import HeaderBox from '../comments/HeaderBox';
 import PaginationBox from '../comments/PaginationBox';
@@ -14,15 +15,14 @@ const headData = [
   { idx: 6, title: '바로이동' },
 ];
 
-const colScope = ['5%', '10%', '45%', '20%', '10%', '10%'];
+const colScope = ['5%', '10%', '45%', '15%', '10%', '15%'];
 
 const PostCommentPage = () => {
-  const [comments, setComments] = useState([]);
+  const { setComments } = useContext(CommentContext);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const baseUrl =
-      'https://freshrimpsushi.com/dashboard/api/comments.php?action=getPostComments';
+    const baseUrl = 'https://freshrimpsushi.com/dashboard/api/comments.php?action=getPostComments';
     setLoading(true);
     const fetchData = async () => {
       const response = await axios.post(baseUrl, null, {});
@@ -31,18 +31,31 @@ const PostCommentPage = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+    return setComments([]);
+  }, [setComments]);
+
+  // if (loading) {
+  //   return (
+  //     <div className="post-comment-page">
+  //       <div className="header-box">
+  //         <HeaderBox headData={headData} colScope={colScope} />
+  //       </div>
+  //       <div className="body-box">로딩중...</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="post-comment-page">
-      <div className="header-box">
-        <HeaderBox headData={headData} colScope={colScope} />
-      </div>
-      <div className="body-box">
-        <BodyBox colScope={colScope} comments={comments} />
-      </div>
+      <table>
+        <thead className="thead-box">
+          <HeaderBox headData={headData} colScope={colScope} />
+        </thead>
+        <tbody className="tbody-box">{loading ? <p>로딩중</p> : <BodyBox colScope={colScope} />}</tbody>
+      </table>
       <div className="footer-box">
-        <PaginationBox />
+        페이지네이션
+        {/* <PaginationBox /> */}
       </div>
     </div>
   );

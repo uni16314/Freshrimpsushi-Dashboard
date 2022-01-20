@@ -1,32 +1,40 @@
 .post-comment-page {
   flex: 1;
-  background-color: pink;
   display: flex;
   flex-direction: column;
-  padding: 20px;
 
-  .header-box {
-    background-color: #58afff;
-    color: white;
+  table {
+    flex: 1;
+    max-height: 800px;
     display: flex;
-    flex-direction: row;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    box-sizing: border-box;
-    border-bottom: 2px solid white;
-  }
+    flex-direction: column;
+    justify-content: flex-start;
 
-  .body-box {
-    background-color: #eeeeee;
-    height: calc(100vh - 116px);
-    overflow: scroll;
+    .thead-box {
+      min-height: 50px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: #58afff;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      border-bottom: 1px solid #eeeeee;
+      box-sizing: border-box;
+    }
+
+    .tbody-box {
+      flex: 1;
+      max-height: calc(100vh - 140px);
+      display: flex;
+      flex-direction: column;
+      overflow: scroll;
+    }
   }
 
   .footer-box {
-    padding: 10px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
     justify-content: flex-end;
+    background-color: green;
+    min-height: 50px;
   }
 }

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../contexts/AuthContext';
 import CommentContext from '../../contexts/CommentContext';
 import BodyBox from '../comments/BodyBox';
 import HeaderBox from '../comments/HeaderBox';
@@ -18,8 +20,20 @@ const headData = [
 const colScope = ['5%', '10%', '45%', '15%', '10%', '15%'];
 
 const PostCommentPage = () => {
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const { setComments } = useContext(CommentContext);
   const [loading, setLoading] = useState(false);
+  const [pages, setPages] = useState({
+    currPage: 1,
+    cmtPerPage: 4,
+  });
+
+  useEffect(() => {
+    if (!auth.userId && !auth.isLogin) {
+      navigate('/login');
+    }
+  }, [auth, navigate]);
 
   useEffect(() => {
     const baseUrl = 'https://freshrimpsushi.com/dashboard/api/comments.php?action=getPostComments';
@@ -34,28 +48,16 @@ const PostCommentPage = () => {
     return setComments([]);
   }, [setComments]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="post-comment-page">
-  //       <div className="header-box">
-  //         <HeaderBox headData={headData} colScope={colScope} />
-  //       </div>
-  //       <div className="body-box">로딩중...</div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="post-comment-page">
       <table>
         <thead className="thead-box">
           <HeaderBox headData={headData} colScope={colScope} />
         </thead>
-        <tbody className="tbody-box">{loading ? <p>로딩중</p> : <BodyBox colScope={colScope} />}</tbody>
+        <tbody className="tbody-box">{loading ? <p>로딩중</p> : <BodyBox colScope={colScope} pages={pages} />}</tbody>
       </table>
       <div className="footer-box">
-        페이지네이션
-        {/* <PaginationBox /> */}
+        <PaginationBox cmtPerPage={pages.cmtPerPage} pages={pages} setPages={setPages} />
       </div>
     </div>
   );

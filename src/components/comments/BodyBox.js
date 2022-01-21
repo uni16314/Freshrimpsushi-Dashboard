@@ -2,25 +2,25 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LinkIcon from '@mui/icons-material/Link';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
 import 'katex/dist/katex.min.css';
 import './comments.scss';
 import { DeleteDialog } from '../CustomDialog/CustomDialog';
 import CommentContext from '../../contexts/CommentContext';
+import WriteItem from './WriteItem';
+import SubCommentItem from './SubCommentItem';
 
-function checkString(str, length) {
+export function checkString(str, length) {
   return str.length >= length;
 }
 
 const CommentItem = ({ index, comment, colScope }) => {
   const [readMore, setReadMore] = useState(false);
+  const [subOpened, setSubOpened] = useState(false);
+  const [writeOpened, setWriteOpened] = useState(false);
   const [openedDialog, setOpenedDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const katexRef = useRef(null);
@@ -35,6 +35,7 @@ const CommentItem = ({ index, comment, colScope }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     renderMathInElement(katexRef.current, {
       delimiters: [
         { left: '$$', right: '$$', display: true },
@@ -48,7 +49,16 @@ const CommentItem = ({ index, comment, colScope }) => {
       },
       throwOnError: false,
     });
+    setLoading(false);
   }, [readMore]);
+
+  if (loading) {
+    return (
+      <tr className="body-tr">
+        <td>로딩중</td>
+      </tr>
+    );
+  }
 
   return (
     <>
@@ -68,12 +78,67 @@ const CommentItem = ({ index, comment, colScope }) => {
                 ? `${comment.content.substring(0, 120)}...`
                 : comment.content,
             }}
-          />
+          ></div>
           {checkString(comment.content, 120) ? (
-            <button className="more-btn" onClick={() => setReadMore(!readMore)}>
-              {readMore ? 'Show less' : 'Read more'}
-            </button>
+            <div className="more-btn" onClick={() => setReadMore(!readMore)}>
+              {readMore ? 'show less' : 'read more'}
+            </div>
           ) : null}
+          {/* <>
+            {subOpened ? (
+              <>
+                <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
+                  <RemoveIcon />
+                  <span>숨기기</span>
+                </div>
+                <SubCommentItem comments={comment} />
+              </>
+            ) : (
+              <>
+                {comment.child_cnt > 0 ? (
+                  <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
+                    <AddIcon />
+                    <span>{comment.child_cnt}개의 답글</span>
+                  </div>
+                ) : (
+                  <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
+                    <AddIcon />
+                    <span>답글 달기</span>
+                  </div>
+                )}
+              </>
+            )}
+          </> */}
+
+          {comment.child_cnt > 0 ? (
+            <>
+              {subOpened ? (
+                <>
+                  <div
+                    className="sub-open"
+                    onClick={() => {
+                      setSubOpened(!subOpened);
+                      setWriteOpened(false);
+                    }}
+                  >
+                    <RemoveIcon />
+                    <span>숨기기</span>
+                  </div>
+                  <SubCommentItem comments={comment} writeOpened={writeOpened} setWriteOpened={setWriteOpened} />
+                </>
+              ) : (
+                <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
+                  <AddIcon />
+                  <span>{comment.child_cnt}개의 답글</span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="sub-open" onClick={() => setWriteOpened(!writeOpened)}>
+              <AddIcon />
+              <span>답글 달기</span>
+            </div>
+          )}
         </td>
         <td className="comment-item" style={{ width: colScope[3] }}>
           {comment.board_title}
@@ -102,15 +167,25 @@ const CommentItem = ({ index, comment, colScope }) => {
           <DeleteDialog comment={comment} openedDialog={openedDialog} setOpenedDialog={setOpenedDialog} />
         </td>
       </tr>
+      {writeOpened ? <WriteItem comment={comment} colScope={colScope} /> : null}
     </>
   );
 };
 
-const BodyBox = ({ colScope }) => {
+const BodyBox = ({ colScope, pages }) => {
   const { comments } = useContext(CommentContext);
+
+  const indexOfLast = pages.currPage * pages.cmtPerPage;
+  const indexOfFirst = indexOfLast - pages.cmtPerPage;
+  function currentComment(tmp) {
+    let currentPosts = 0;
+    currentPosts = tmp.slice(indexOfFirst, indexOfLast);
+    return currentPosts;
+  }
+
   return (
     <>
-      {comments.map((comment, index) => (
+      {currentComment(comments).map((comment, index) => (
         <CommentItem key={index} index={index} comment={comment} colScope={colScope} />
       ))}
     </>

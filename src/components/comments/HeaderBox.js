@@ -3,7 +3,7 @@ import './comments.scss';
 
 const HeaderItem = ({ headData, colScope }) => {
   return (
-    <tr className='header-tr'>
+    <tr className="header-tr">
       {headData.map((data) => (
         <th className="header-item" key={data.idx} style={{ width: colScope[data.idx - 1] }}>
           {data.title}

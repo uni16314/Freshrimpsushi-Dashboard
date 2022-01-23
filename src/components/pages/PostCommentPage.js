@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
 import CommentContext from '../../contexts/CommentContext';
+import PageContext from '../../contexts/PageContext';
 import BodyBox from '../comments/BodyBox';
 import HeaderBox from '../comments/HeaderBox';
 import PaginationBox from '../comments/PaginationBox';
@@ -23,11 +24,8 @@ const PostCommentPage = () => {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const { setComments } = useContext(CommentContext);
+  const { pages, setPages } = useContext(PageContext);
   const [loading, setLoading] = useState(false);
-  const [pages, setPages] = useState({
-    currPage: 1,
-    cmtPerPage: 4,
-  });
 
   useEffect(() => {
     if (!auth.userId && !auth.isLogin) {
@@ -42,6 +40,9 @@ const PostCommentPage = () => {
       const response = await axios.post(baseUrl, null, {});
       const rows = response.data.rows;
       setComments(rows);
+      let maxPage =
+        rows.length % pages.cmtPerPage !== 0 ? rows.length / pages.cmtPerPage + 1 : rows.length / pages.cmtPerPage;
+      setPages({ ...pages, maxPage: maxPage });
       setLoading(false);
     };
     fetchData();
@@ -54,10 +55,18 @@ const PostCommentPage = () => {
         <thead className="thead-box">
           <HeaderBox headData={headData} colScope={colScope} />
         </thead>
-        <tbody className="tbody-box">{loading ? <p>로딩중</p> : <BodyBox colScope={colScope} pages={pages} />}</tbody>
+        <tbody className="tbody-box">
+          {loading ? (
+            <tr>
+              <td>로딩중</td>
+            </tr>
+          ) : (
+            <BodyBox colScope={colScope} />
+          )}
+        </tbody>
       </table>
       <div className="footer-box">
-        <PaginationBox cmtPerPage={pages.cmtPerPage} pages={pages} setPages={setPages} />
+        <PaginationBox />
       </div>
     </div>
   );

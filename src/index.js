@@ -4,16 +4,19 @@ import { BrowserRouter } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { AuthContextProvider } from './contexts/AuthContext';
 import { CommentContextProvider } from './contexts/CommentContext';
+import { PageContextProvider } from './contexts/PageContext';
 import './index.scss';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <CommentContextProvider>
-        <BrowserRouter>
-          <Layout />
-        </BrowserRouter>
-      </CommentContextProvider>
+      <PageContextProvider>
+        <CommentContextProvider>
+          <BrowserRouter>
+            <Layout />
+          </BrowserRouter>
+        </CommentContextProvider>
+      </PageContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('freshrimpsushi'),

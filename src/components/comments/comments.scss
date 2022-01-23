@@ -258,3 +258,36 @@
     }
   }
 }
+
+.footer-box ul {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: 350px;
+  padding: 10px 20px;
+  border-radius: 50px;
+
+  li {
+    margin: 0 5px;
+  }
+
+  button {
+    margin: 0;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    display: block;
+    color: #777;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      background: #333;
+      color: #fff;
+    }
+  }
+}

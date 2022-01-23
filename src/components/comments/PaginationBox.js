@@ -1,65 +1,67 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
-import CommentContext from '../../contexts/CommentContext';
+import PageContext from '../../contexts/PageContext';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import './comments.scss';
 
-const PageUl = styled.ul`
-  float: left;
-  list-style: none;
-  text-align: center;
-  border-radius: 3px;
-  color: white;
-  padding: 1px;
-  border-top: 3px solid #186ead;
-  border-bottom: 3px solid #186ead;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
+const PaginationBox = () => {
+  const { pages, setPages } = useContext(PageContext);
 
-const PageLi = styled.li`
-  display: inline-block;
-  font-size: 17px;
-  font-weight: 600;
-  padding: 5px;
-  border-radius: 5px;
-  width: 25px;
-  &:hover {
-    cursor: pointer;
-    color: white;
-    background-color: #263a6c;
+  function createArray(num) {
+    let array = [];
+    for (let i = 1; i <= num; i++) {
+      array.push(i);
+    }
+    return array;
   }
-  &:focus::after {
-    color: white;
-    background-color: #263a6c;
-  }
-`;
 
-const PageSpan = styled.span`
-  &:hover::after,
-  &:focus::after {
-    border-radius: 100%;
-    color: white;
-    background-color: #263a6c;
-  }
-`;
+  const prevClick = () => {
+    let currPage = pages.currPage;
+    if (currPage - 1 > 0) {
+      if (pages.currPage % 5 === 1) {
+        setPages({ ...pages, currPage: pages.currPage - 1, pageIdx: pages.pageIdx - 1 });
+      } else {
+        setPages({ ...pages, currPage: pages.currPage - 1 });
+      }
+    }
+  };
 
-const PaginationBox = ({ cmtPerPage, pages, setPages }) => {
-  const { comments } = useContext(CommentContext);
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(comments.length / cmtPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  const nextClick = () => {
+    if (pages.currPage + 1 <= pages.maxPage) {
+      if (pages.currPage % 5 === 0) {
+        setPages({ ...pages, currPage: pages.currPage + 1, pageIdx: pages.pageIdx + 1 });
+      } else {
+        setPages({ ...pages, currPage: pages.currPage + 1 });
+      }
+    }
+  };
+
+  const btnClick = (number) => {
+    setPages({ ...pages, currPage: number });
+  };
 
   return (
-    <div>
-      <PageUl className="pagination">
-        {pageNumbers.map((number) => (
-          <PageLi key={number} className="page-item">
-            <PageSpan onClick={() => setPages({ ...pages, currPage: number })} className="page-link">
-              {number}
-            </PageSpan>
-          </PageLi>
-        ))}
-      </PageUl>
-    </div>
+    <ul>
+      <li>
+        <button onClick={prevClick}>
+          <ArrowBackIcon />
+        </button>
+      </li>
+      {createArray(pages.maxPage).map((number) => (
+        <>
+          {number > (pages.pageIdx - 1) * 5 && number <= pages.pageIdx * 5 ? (
+            <li key={number}>
+              <button onClick={() => btnClick(number)}>{number}</button>
+            </li>
+          ) : null}
+        </>
+      ))}
+      <li>
+        <button onClick={nextClick}>
+          <ArrowForwardIcon />
+        </button>
+      </li>
+    </ul>
   );
 };
 

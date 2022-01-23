@@ -12,6 +12,7 @@ import { DeleteDialog } from '../CustomDialog/CustomDialog';
 import CommentContext from '../../contexts/CommentContext';
 import WriteItem from './WriteItem';
 import SubCommentItem from './SubCommentItem';
+import PageContext from '../../contexts/PageContext';
 
 export function checkString(str, length) {
   return str.length >= length;
@@ -24,6 +25,7 @@ const CommentItem = ({ index, comment, colScope }) => {
   const [openedDialog, setOpenedDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const katexRef = useRef(null);
+  const { pages } = useContext(PageContext);
 
   const gotoBtn = () => {
     const openLink = `https://freshrimpsushi.github.io/posts/${comment.board_slug}#comment${comment.cmt_idx}`;
@@ -50,7 +52,7 @@ const CommentItem = ({ index, comment, colScope }) => {
       throwOnError: false,
     });
     setLoading(false);
-  }, [readMore]);
+  }, [readMore, pages.currPage]);
 
   if (loading) {
     return (
@@ -84,31 +86,6 @@ const CommentItem = ({ index, comment, colScope }) => {
               {readMore ? 'show less' : 'read more'}
             </div>
           ) : null}
-          {/* <>
-            {subOpened ? (
-              <>
-                <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
-                  <RemoveIcon />
-                  <span>숨기기</span>
-                </div>
-                <SubCommentItem comments={comment} />
-              </>
-            ) : (
-              <>
-                {comment.child_cnt > 0 ? (
-                  <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
-                    <AddIcon />
-                    <span>{comment.child_cnt}개의 답글</span>
-                  </div>
-                ) : (
-                  <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
-                    <AddIcon />
-                    <span>답글 달기</span>
-                  </div>
-                )}
-              </>
-            )}
-          </> */}
 
           {comment.child_cnt > 0 ? (
             <>
@@ -172,21 +149,27 @@ const CommentItem = ({ index, comment, colScope }) => {
   );
 };
 
-const BodyBox = ({ colScope, pages }) => {
+const BodyBox = ({ colScope }) => {
   const { comments } = useContext(CommentContext);
+  const { pages } = useContext(PageContext);
 
   const indexOfLast = pages.currPage * pages.cmtPerPage;
   const indexOfFirst = indexOfLast - pages.cmtPerPage;
-  function currentComment(tmp) {
+  function currentComment(cmt) {
     let currentPosts = 0;
-    currentPosts = tmp.slice(indexOfFirst, indexOfLast);
+    currentPosts = cmt.slice(indexOfFirst, indexOfLast);
     return currentPosts;
   }
 
   return (
     <>
       {currentComment(comments).map((comment, index) => (
-        <CommentItem key={index} index={index} comment={comment} colScope={colScope} />
+        <CommentItem
+          key={index}
+          index={(pages.currPage - 1) * pages.cmtPerPage + index}
+          comment={comment}
+          colScope={colScope}
+        />
       ))}
     </>
   );

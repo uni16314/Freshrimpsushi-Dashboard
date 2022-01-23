@@ -52,27 +52,17 @@ const LoginForm = ({ setAuth }) => {
 
   return (
     <div className="loginForm">
-      <h1>Login</h1>
+      <h1>
+        <img src={require('../../assets/img/logo.png')} alt="logo" />
+      </h1>
       <form onSubmit={handleSubmit}>
         <div className="txt_field">
-          <input
-            type="text"
-            name="inputId"
-            value={inputs.inputId}
-            onChange={handleChange}
-            placeholder="username"
-          />
+          <input type="text" name="inputId" value={inputs.inputId} onChange={handleChange} placeholder="username" />
           <span></span>
           <label>Username</label>
         </div>
         <div className="txt_field">
-          <input
-            type="password"
-            name="inputPw"
-            value={inputs.inputPw}
-            onChange={handleChange}
-            placeholder="******"
-          />
+          <input type="password" name="inputPw" value={inputs.inputPw} onChange={handleChange} placeholder="******" />
           <span></span>
           <label>Password</label>
         </div>

@@ -22,6 +22,7 @@ const CommentItem = ({ index, comment, colScope }) => {
   const [readMore, setReadMore] = useState(false);
   const [subOpened, setSubOpened] = useState(false);
   const [writeOpened, setWriteOpened] = useState(false);
+  const [updateOpened, setUpdateOpened] = useState(false);
   const [openedDialog, setOpenedDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const katexRef = useRef(null);
@@ -71,8 +72,9 @@ const CommentItem = ({ index, comment, colScope }) => {
         <td className="comment-item" style={{ width: colScope[1] }}>
           {comment.author}
         </td>
-        <td className="comment-item p20" style={{ width: colScope[2] }} ref={katexRef}>
+        <td className="comment-item p20" style={{ width: colScope[2] }}>
           <div
+            ref={katexRef}
             dangerouslySetInnerHTML={{
               __html: readMore
                 ? comment.content
@@ -80,7 +82,7 @@ const CommentItem = ({ index, comment, colScope }) => {
                 ? `${comment.content.substring(0, 120)}...`
                 : comment.content,
             }}
-          ></div>
+          />
           {checkString(comment.content, 120) ? (
             <div className="more-btn" onClick={() => setReadMore(!readMore)}>
               {readMore ? 'show less' : 'read more'}
@@ -111,7 +113,13 @@ const CommentItem = ({ index, comment, colScope }) => {
               )}
             </>
           ) : (
-            <div className="sub-open" onClick={() => setWriteOpened(!writeOpened)}>
+            <div
+              className="sub-open"
+              onClick={() => {
+                setWriteOpened(!writeOpened);
+                setSubOpened(!subOpened);
+              }}
+            >
               <AddIcon />
               <span>답글 달기</span>
             </div>
@@ -136,7 +144,12 @@ const CommentItem = ({ index, comment, colScope }) => {
               <Button className="btn btn-open" onClick={gotoBtn} variant="contained" startIcon={<LinkIcon />} />
             </div>
             <div className="item-tools-bottom">
-              <Button className="btn btn-open" onClick={() => {}} variant="outline" startIcon={<EditIcon />}>
+              <Button
+                className="btn btn-open"
+                onClick={() => setUpdateOpened(!updateOpened)}
+                variant="outline"
+                startIcon={<EditIcon />}
+              >
                 수정
               </Button>
             </div>
@@ -144,7 +157,8 @@ const CommentItem = ({ index, comment, colScope }) => {
           <DeleteDialog comment={comment} openedDialog={openedDialog} setOpenedDialog={setOpenedDialog} />
         </td>
       </tr>
-      {writeOpened ? <WriteItem comment={comment} colScope={colScope} /> : null}
+      {writeOpened ? <WriteItem comment={comment} setWriteOpened={setWriteOpened} /> : null}
+      {/* {updateOpened ? <WriteItem comment={comment} setUpdateOpened={setUpdateOpened} /> : null} */}
     </>
   );
 };
@@ -156,9 +170,9 @@ const BodyBox = ({ colScope }) => {
   const indexOfLast = pages.currPage * pages.cmtPerPage;
   const indexOfFirst = indexOfLast - pages.cmtPerPage;
   function currentComment(cmt) {
-    let currentPosts = 0;
-    currentPosts = cmt.slice(indexOfFirst, indexOfLast);
-    return currentPosts;
+    let currComments = 0;
+    currComments = cmt.slice(indexOfFirst, indexOfLast);
+    return currComments;
   }
 
   return (

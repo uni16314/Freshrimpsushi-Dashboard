@@ -68,6 +68,10 @@
     &.p20 {
       padding-left: 1em;
       padding-right: 1em;
+
+      div {
+        white-space: pre-wrap;
+      }
     }
 
     &.no-border {
@@ -141,6 +145,10 @@
           text-align: left;
           padding: 1em;
           overflow-y: scroll;
+
+          div {
+            white-space: pre-line;
+          }
         }
       }
 

@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import './comments.scss';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
+import axios from 'axios';
+import { getFormData } from '../lib/api';
+import AuthContext from '../../contexts/AuthContext';
+import CommentContext from '../../contexts/CommentContext';
 
-const WriteItem = ({ comment, colScope }) => {
+const WriteItem = ({ comment, setWriteOpened }) => {
+  const { auth } = useContext(AuthContext);
+  const { comments, setComments } = useContext(CommentContext);
   const [eValue, setEValue] = useState('');
   const [vValue, setVValue] = useState('');
+  const [loading, setLoading] = useState(false);
   const vRef = useRef(null);
 
   useEffect(() => {
@@ -28,10 +33,45 @@ const WriteItem = ({ comment, colScope }) => {
   }, [eValue]);
 
   const handleChange = (e) => {
-    const { value, name } = e.target;
-    console.log(value);
+    const { value } = e.target;
     setEValue(value);
     setVValue(value);
+  };
+
+  const onReply = () => {
+    const baseUrl = 'https://freshrimpsushi.com/dashboard/api/comments.php?action=reply';
+    const formData = getFormData({
+      cmt_idx: comment.cmt_idx,
+      admin_id: auth.userId,
+      content: vValue,
+    });
+    setLoading(true);
+    const fetchData = async () => {
+      const response = await axios.post(baseUrl, formData, {});
+      const data = response.data;
+      const { msg, rows } = data;
+      if (msg) {
+        const cmt = comments.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
+        cmt.child.push(rows);
+        cmt.child_cnt++;
+        // const commentNext = [...comments];
+        // const cmt = commentNext.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
+        // cmt.child.push(rows);
+        // cmt.child_cnt++;
+        // console.log(comments);
+        // console.log(commentNext);
+        // const commentNext = comments.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
+        // commentNext.child.push(rows);
+        // commentNext.child_cnt++;
+        // console.log(commentNext);
+        // console.log(comments);
+
+        // setComments(commentNext);
+        setWriteOpened(false);
+      }
+      setLoading(false);
+    };
+    fetchData();
   };
 
   return (
@@ -48,11 +88,16 @@ const WriteItem = ({ comment, colScope }) => {
             placeholder="댓글을 작성하세요..."
           />
           <div className="md-viewer">
-            <pre ref={vRef}>{vValue}</pre>
+            <div
+              ref={vRef}
+              dangerouslySetInnerHTML={{
+                __html: vValue,
+              }}
+            />
           </div>
         </div>
         <div className="md-btn">
-          <button>확인</button>
+          <button onClick={onReply}>확인</button>
         </div>
       </td>
     </tr>

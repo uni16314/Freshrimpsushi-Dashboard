@@ -1,11 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PageContext from '../../contexts/PageContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import './comments.scss';
+import CommentContext from '../../contexts/CommentContext';
 
 const PaginationBox = () => {
   const { pages, setPages } = useContext(PageContext);
+  const { comments } = useContext(CommentContext);
+
+  useEffect(() => {
+    let maxPage =
+      comments.length % pages.cmtPerPage !== 0
+        ? comments.length / pages.cmtPerPage + 1
+        : comments.length / pages.cmtPerPage;
+    setPages({ ...pages, maxPage: maxPage });
+  }, [comments]);
 
   function createArray(num) {
     let array = [];
@@ -51,7 +61,9 @@ const PaginationBox = () => {
         <>
           {number > (pages.pageIdx - 1) * 5 && number <= pages.pageIdx * 5 ? (
             <li key={number}>
-              <button onClick={() => btnClick(number)}>{number}</button>
+              <button onClick={() => btnClick(number)} className={pages.currPage === number ? 'active' : ''}>
+                {number}
+              </button>
             </li>
           ) : null}
         </>

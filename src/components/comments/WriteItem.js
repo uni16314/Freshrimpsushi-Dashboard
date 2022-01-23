@@ -10,7 +10,7 @@ import CommentContext from '../../contexts/CommentContext';
 
 const WriteItem = ({ comment, setWriteOpened }) => {
   const { auth } = useContext(AuthContext);
-  const { comments, setComments } = useContext(CommentContext);
+  const { comments } = useContext(CommentContext);
   const [eValue, setEValue] = useState('');
   const [vValue, setVValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ const WriteItem = ({ comment, setWriteOpened }) => {
     const formData = getFormData({
       cmt_idx: comment.cmt_idx,
       admin_id: auth.userId,
-      content: vValue,
+      content: eValue,
     });
     setLoading(true);
     const fetchData = async () => {
@@ -54,19 +54,6 @@ const WriteItem = ({ comment, setWriteOpened }) => {
         const cmt = comments.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
         cmt.child.push(rows);
         cmt.child_cnt++;
-        // const commentNext = [...comments];
-        // const cmt = commentNext.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
-        // cmt.child.push(rows);
-        // cmt.child_cnt++;
-        // console.log(comments);
-        // console.log(commentNext);
-        // const commentNext = comments.find((cmt) => (cmt.cmt_idx === comment.cmt_idx ? true : false));
-        // commentNext.child.push(rows);
-        // commentNext.child_cnt++;
-        // console.log(commentNext);
-        // console.log(comments);
-
-        // setComments(commentNext);
         setWriteOpened(false);
       }
       setLoading(false);
@@ -76,8 +63,10 @@ const WriteItem = ({ comment, setWriteOpened }) => {
 
   return (
     <tr className="body-tr body-tr-sub">
-      <td className="comment-item no-border" style={{ width: '15%' }}></td>
-      <td className="comment-item item-write" style={{ width: '70%' }}>
+      <td className="comment-item no-border" style={{ width: '15%' }}>
+        답글달기
+      </td>
+      <td className="comment-item item-write" style={{ width: '80%' }}>
         <div className="editor">
           <textarea
             className="md-editor"
@@ -97,6 +86,7 @@ const WriteItem = ({ comment, setWriteOpened }) => {
           </div>
         </div>
         <div className="md-btn">
+          <button onClick={() => setWriteOpened(false)}>닫기</button>
           <button onClick={onReply}>확인</button>
         </div>
       </td>

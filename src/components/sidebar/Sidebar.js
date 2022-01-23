@@ -4,7 +4,8 @@ import AuthContext from '../../contexts/AuthContext';
 import './Sidebar.scss';
 
 const menus = [
-  { idx: 1, title: '홈', link: '/' },
+  // { idx: 1, title: '홈', link: '/' },
+  // { idx: 1, title: '홈', link: '/post' },
   { idx: 2, title: '포스트댓글', link: '/post' },
 ];
 
@@ -21,10 +22,7 @@ const SidebarList = () => {
 const SidebarListItem = ({ title, link }) => {
   return (
     <li className="sidebar-list-item">
-      <NavLink
-        to={link}
-        className={({ isActive }) => (isActive ? 'active' : '')}
-      >
+      <NavLink to={link} className={({ isActive }) => (isActive ? 'active' : '')}>
         {title}
       </NavLink>
     </li>
@@ -49,7 +47,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar-container">
       <div className="sidebar-logo">
-        <Link to="/">
+        <Link to="/post">
           <img src={require('../../assets/img/logo.png')} alt="logo" />
         </Link>
       </div>

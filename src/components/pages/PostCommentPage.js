@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
 import CommentContext from '../../contexts/CommentContext';
-import PageContext from '../../contexts/PageContext';
 import BodyBox from '../comments/BodyBox';
 import HeaderBox from '../comments/HeaderBox';
 import PaginationBox from '../comments/PaginationBox';
@@ -24,7 +23,6 @@ const PostCommentPage = () => {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const { setComments } = useContext(CommentContext);
-  const { pages, setPages } = useContext(PageContext);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,9 +38,6 @@ const PostCommentPage = () => {
       const response = await axios.post(baseUrl, null, {});
       const rows = response.data.rows;
       setComments(rows);
-      let maxPage =
-        rows.length % pages.cmtPerPage !== 0 ? rows.length / pages.cmtPerPage + 1 : rows.length / pages.cmtPerPage;
-      setPages({ ...pages, maxPage: maxPage });
       setLoading(false);
     };
     fetchData();

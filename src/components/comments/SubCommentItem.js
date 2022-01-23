@@ -5,7 +5,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { SubDeleteDialog } from '../CustomDialog/CustomDialog';
 
-const SubCommentItem = ({ comments, writeOpened, setWriteOpened }) => {
+const SubCommentItem = ({
+  comments,
+  writeOpened,
+  setWriteOpened,
+  reUpdateOpened,
+  setReUpdateOpened,
+  setUpdateComment,
+}) => {
   const [openedDialog, setOpenedDialog] = useState(false);
   const katexRef = useRef(null);
   useEffect(() => {
@@ -34,7 +41,15 @@ const SubCommentItem = ({ comments, writeOpened, setWriteOpened }) => {
         <div className="sub-item" key={index}>
           <div className="info">
             <span className="author">{comment.author}</span> - <span className="datetime">{comment.datetime}</span>
-            <Button className="btn btn-open" onClick={() => {}} variant="contained" startIcon={<EditIcon />} />
+            <Button
+              className="btn btn-open"
+              onClick={() => {
+                setReUpdateOpened(!reUpdateOpened);
+                setUpdateComment(comment);
+              }}
+              variant="contained"
+              startIcon={<EditIcon />}
+            />
             <Button
               className="btn btn-delete"
               onClick={openDialog}

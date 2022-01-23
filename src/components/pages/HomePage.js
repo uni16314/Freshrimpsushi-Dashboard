@@ -9,6 +9,8 @@ const HomePage = () => {
   useEffect(() => {
     if (!auth.userId && !auth.isLogin) {
       navigate('/login');
+    } else {
+      navigate('/post');
     }
   }, [auth, navigate]);
 

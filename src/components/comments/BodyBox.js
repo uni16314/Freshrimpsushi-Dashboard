@@ -13,6 +13,7 @@ import CommentContext from '../../contexts/CommentContext';
 import WriteItem from './WriteItem';
 import SubCommentItem from './SubCommentItem';
 import PageContext from '../../contexts/PageContext';
+import UpdateItem, { ReUpdateItem } from './UpdateItem';
 
 export function checkString(str, length) {
   return str.length >= length;
@@ -23,8 +24,10 @@ const CommentItem = ({ index, comment, colScope }) => {
   const [subOpened, setSubOpened] = useState(false);
   const [writeOpened, setWriteOpened] = useState(false);
   const [updateOpened, setUpdateOpened] = useState(false);
+  const [reUpdateOpened, setReUpdateOpened] = useState(false);
   const [openedDialog, setOpenedDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [updateComment, setUpdateComment] = useState(null);
   const katexRef = useRef(null);
   const { pages } = useContext(PageContext);
 
@@ -98,15 +101,32 @@ const CommentItem = ({ index, comment, colScope }) => {
                     onClick={() => {
                       setSubOpened(!subOpened);
                       setWriteOpened(false);
+                      setUpdateOpened(false);
+                      setReUpdateOpened(false);
                     }}
                   >
                     <RemoveIcon />
                     <span>숨기기</span>
                   </div>
-                  <SubCommentItem comments={comment} writeOpened={writeOpened} setWriteOpened={setWriteOpened} />
+                  <SubCommentItem
+                    comments={comment}
+                    writeOpened={writeOpened}
+                    setWriteOpened={setWriteOpened}
+                    reUpdateOpened={reUpdateOpened}
+                    setReUpdateOpened={setReUpdateOpened}
+                    setUpdateComment={setUpdateComment}
+                  />
                 </>
               ) : (
-                <div className="sub-open" onClick={() => setSubOpened(!subOpened)}>
+                <div
+                  className="sub-open"
+                  onClick={() => {
+                    setSubOpened(!subOpened);
+                    setWriteOpened(false);
+                    setUpdateOpened(false);
+                    setReUpdateOpened(false);
+                  }}
+                >
                   <AddIcon />
                   <span>{comment.child_cnt}개의 답글</span>
                 </div>
@@ -146,7 +166,12 @@ const CommentItem = ({ index, comment, colScope }) => {
             <div className="item-tools-bottom">
               <Button
                 className="btn btn-open"
-                onClick={() => setUpdateOpened(!updateOpened)}
+                onClick={() => {
+                  setUpdateOpened(!updateOpened);
+                  setWriteOpened(false);
+                  setSubOpened(false);
+                  setReUpdateOpened(false);
+                }}
                 variant="outline"
                 startIcon={<EditIcon />}
               >
@@ -158,7 +183,10 @@ const CommentItem = ({ index, comment, colScope }) => {
         </td>
       </tr>
       {writeOpened ? <WriteItem comment={comment} setWriteOpened={setWriteOpened} /> : null}
-      {/* {updateOpened ? <WriteItem comment={comment} setUpdateOpened={setUpdateOpened} /> : null} */}
+      {updateOpened ? <UpdateItem comment={comment} setUpdateOpened={setUpdateOpened} /> : null}
+      {reUpdateOpened ? (
+        <ReUpdateItem comment={comment} updateComment={updateComment} setReUpdateOpened={setReUpdateOpened} />
+      ) : null}
     </>
   );
 };

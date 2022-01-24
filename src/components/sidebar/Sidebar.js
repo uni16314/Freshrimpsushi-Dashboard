@@ -5,7 +5,6 @@ import './Sidebar.scss';
 
 const menus = [
   // { idx: 1, title: '홈', link: '/' },
-  // { idx: 1, title: '홈', link: '/post' },
   { idx: 2, title: '포스트댓글', link: '/post' },
 ];
 
